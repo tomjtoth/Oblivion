@@ -67,15 +67,21 @@ def get_key():
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
     try:
-        tty.setraw(sys.stdin.fileno())
+        tty.setraw(fd)
         ch = sys.stdin.read(1)
-        # Handle arrow keys (3-character sequence)
+        # Handle arrow keys and page up/down (multi-character sequences)
         if ch == "\x1b":
             ch = sys.stdin.read(2)
             if ch == "[A":
                 return "up"
             elif ch == "[B":
                 return "down"
+            elif ch == "[5":  # Page Up
+                sys.stdin.read(1)  # Consume the final '~'
+                return "page_up"
+            elif ch == "[6":  # Page Down
+                sys.stdin.read(1)  # Consume the final '~'
+                return "page_down"
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     return ch
@@ -90,6 +96,7 @@ def interactive_sort():
             files[idx], files[idx + 1] = files[idx + 1], files[idx]
 
     idx = 0
+    max_idx = len(files) - 1
     dragging = False
     scroll_offset = 0
 
@@ -106,9 +113,13 @@ def interactive_sort():
         if key == "up" and idx > 0:
             idx -= 1
             swap()
-        elif key == "down" and idx < len(files) - 1:
+        elif key == "down" and idx < max_idx:
             swap()
             idx += 1
+        elif key == "page_up" and not dragging:
+            idx = max(idx - 5, 0)
+        elif key == "page_down" and not dragging:
+            idx = min(idx + 5, max_idx)
         elif key == "\r":  # ENTER
             dragging = not dragging
         elif key == "q":
@@ -125,7 +136,7 @@ def update_timestamps():
     start_time = datetime.strptime("2001-01-01 12:00:00", "%Y-%m-%d %H:%M:%S")
     interval = 86400  # 1 day in seconds
 
-    print("\n  new modification times:\n")
+    print("\n  new modification times of files:\n")
 
     for idx, file in enumerate(files):
         new_time = start_time.timestamp() + (idx * interval)
