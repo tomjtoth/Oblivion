@@ -33,7 +33,7 @@ plugins=(
     "DLCThievesDen.esp"
     "DLCThievesDen - Unofficial Patch.esp"
     "DLCThievesDen - Unofficial Patch - SSSB.esp"
-    
+
     "DLCVileLair.esp"
     "DLCVileLair - Unofficial Patch.esp"
 )
