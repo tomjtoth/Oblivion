@@ -22,14 +22,19 @@ files = []
 def populate_files():
     global files
 
+    print("Loading files...")
+
     home = os.path.expanduser("~")
-    pattern = os.path.join(home, ".steam/steam/steamapps/common/Oblivion/Data/*.*")
+    data_dir = os.path.join(home, ".steam/steam/steamapps/common/Oblivion/Data")
 
     unsorted = []
     for ext in ["esm", "esp"]:
-        unsorted.extend(glob.glob(pattern.replace("*.*", f"*.{ext}")))
+        unsorted.extend(glob.glob(os.path.join(data_dir, f"*.{ext}")))
 
     files = sorted(unsorted, key=lambda x: os.path.getmtime(x))
+    if len(files) == 0:
+        print(f"\n\tERR: found 0 files in {data_dir}")
+        exit(1)
 
 
 def display_files(selected_idx=None, offset=0, dragging=False):
@@ -146,7 +151,6 @@ def update_timestamps():
 
 
 def main():
-    print("Loading files...")
     populate_files()
     interactive_sort()
     update_timestamps()
