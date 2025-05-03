@@ -20,6 +20,8 @@ files = []
 
 
 def populate_files():
+    global files
+
     home = os.path.expanduser("~")
     pattern = os.path.join(home, ".steam/steam/steamapps/common/Oblivion/Data/*.*")
 
@@ -27,11 +29,10 @@ def populate_files():
     for ext in ["esm", "esp"]:
         unsorted.extend(glob.glob(pattern.replace("*.*", f"*.{ext}")))
 
-    global files
     files = sorted(unsorted, key=lambda x: os.path.getmtime(x))
 
 
-def display_files(files, selected_idx=None, offset=0, dragging=False):
+def display_files(selected_idx=None, offset=0, dragging=False):
     """Display files with optional selection highlighting and scrolling"""
     global term_rows
     clear()
@@ -72,13 +73,14 @@ def get_key():
     return ch
 
 
-def swap(files, idx: int):
-    files[idx], files[idx + 1] = files[idx + 1], files[idx]
-
-
 def interactive_sort():
     """Interactive file sorting interface with scrolling support"""
     global term_rows
+
+    def swap():
+        if dragging:
+            files[idx], files[idx + 1] = files[idx + 1], files[idx]
+
     populate_files()
 
     idx = 0
@@ -92,16 +94,14 @@ def interactive_sort():
         elif idx >= scroll_offset + term_rows:
             scroll_offset = idx - term_rows + 1
 
-        display_files(files, idx, scroll_offset, dragging)
+        display_files(idx, scroll_offset, dragging)
         key = get_key()
 
         if key == "up" and idx > 0:
             idx -= 1
-            if dragging:
-                swap(files, idx)
+            swap()
         elif key == "down" and idx < len(files) - 1:
-            if dragging:
-                swap(files, idx)
+            swap()
             idx += 1
         elif key == "\r":  # ENTER
             dragging = not dragging
