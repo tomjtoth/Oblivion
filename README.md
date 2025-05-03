@@ -10,3 +10,5 @@ reg add "HKEY_LOCAL_MACHINE\\Software\\Wow6432Node\\Bethesda Softworks\\Oblivion
 /t REG_SZ \
 /f
 ```
+
+After failing to install 2 different load order managers(?) I came up with my [own solution](./load_order.sh), which is based on changing mtime of plugins.
