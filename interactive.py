@@ -81,8 +81,6 @@ def interactive_sort():
         if dragging:
             files[idx], files[idx + 1] = files[idx + 1], files[idx]
 
-    populate_files()
-
     idx = 0
     dragging = False
     scroll_offset = 0
@@ -130,6 +128,7 @@ def update_timestamps():
 
 def main():
     print("Loading files...")
+    populate_files()
     interactive_sort()
     update_timestamps()
 
