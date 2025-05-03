@@ -9,9 +9,9 @@ import termios
 import tty
 import shutil
 
-# ANSI escape codes for colors
-COLOR_RESET = "\033[0m"
-COLOR_SELECTED = "\033[30;47m"  # Black text on white background
+FONT_RESET = "\033[0m"
+FONT_BOLD = "\033[1m"
+FONT_INVERTED = "\033[30;47m"
 
 clear = lambda: os.system("clear")
 term_size = lambda: shutil.get_terminal_size((80, 20))
@@ -41,17 +41,25 @@ def display_files(selected_idx=None, offset=0, dragging=False):
     terminal_rows = term_rows  # Reserve space for header/footer
     visible_files = files[offset : offset + terminal_rows]
 
-    print("  ↑↑↑↑↑↑" if offset > 0 else "")
+    print(
+        f"{FONT_BOLD}↑↑↑ more files loaded earlier ↑↑↑{FONT_RESET}"
+        if offset > 0
+        else ""
+    )
 
     for idx, file in enumerate(visible_files, start=offset):
         name = os.path.basename(file)
         drg = ">" if idx == selected_idx and dragging else " "
-        hl_start = COLOR_SELECTED if idx == selected_idx else ""
-        hl_ends = COLOR_RESET if idx == selected_idx else ""
+        hl_start = FONT_INVERTED if idx == selected_idx else ""
+        hl_ends = FONT_RESET if idx == selected_idx else ""
 
         print(f"{hl_start}{drg} {name}{hl_ends}")
 
-    print("  ↓↓↓↓↓↓" if offset + terminal_rows < len(files) else "")
+    print(
+        f"{FONT_BOLD}↓↓↓ more files loaded later ↓↓↓{FONT_RESET}"
+        if offset + terminal_rows < len(files)
+        else ""
+    )
 
 
 def get_key():
