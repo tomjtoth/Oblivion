@@ -33,4 +33,4 @@ Use the provided scripts to save additional time during efficient leveling or qu
 ln -s "$PWD/scripts" ~/.local/share/Steam/steamapps/common/Oblivion
 ```
 
-Open the in-game conosole and type `bat scripts/items.bat` to execute all of its commands. Lines beginning with `;` are ignored, the linefeed must be `CRLF`.
+Open the in-game conosole and type `bat scripts/items.txt` to execute all of its commands. Lines beginning with `;` are ignored, linefeeds must be `CRLF`.
