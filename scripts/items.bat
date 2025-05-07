@@ -1,0 +1,15 @@
+player.additem F 5000           ; gold
+
+player.additem 0000920E 5       ; cure disease
+player.additem 00009310 100     ; weak healing potion
+player.additem 0000931A 100     ; weak magicka potion
+player.additem 00000191 50      ; Welkynd Stone
+
+; a set of iron armor
+player.additem 0001C6CF 1
+player.additem 0001C6D1 1
+player.additem 0001C6D2 1
+player.additem 0001C6D0 1
+player.additem 0001C6CE 1
+player.additem 000352C1 1
+
